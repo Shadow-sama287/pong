@@ -6,20 +6,19 @@
     <link rel="icon" href="../assets/favicon-32x32.png">
     <title>Canvas-Title</title>
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        canvas {
-            display: block;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas></canvas>
+    <div class="game-container">
+        <div class="scoreboard">
+            <span id="score-left">0</span>
+            <span id="separator">-</span>
+            <span id="score-right">0</span>
+        </div>
+        <div class="player1"></div>
+        <canvas></canvas>
+        <div class="player2"></div>
+    </div>
 
     <script type="module" src="canvas.js"></script>
 </body>

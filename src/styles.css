@@ -1,0 +1,25 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #222;
+    color: white;
+    font-family: monospace;
+}
+
+canvas {
+    border: 2px solid white; /* Define the play area */
+    background-color: black;
+    display: block;
+}
+
+.scoreboard {
+    text-align: center;
+    font-size: 2rem;
+    margin: 5px;
+    z-index: 1;
+}
