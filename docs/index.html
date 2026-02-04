@@ -4,20 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="../assets/favicon-32x32.png">
-    <title>Canvas-Title</title>
+    <title>Pong</title>
 
     <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="game-container">
+    <div class="whole-container">
         <div class="scoreboard">
+            <span id="player1-nametag">Player 1</span>
             <span id="score-left">0</span>
             <span id="separator">-</span>
             <span id="score-right">0</span>
+            <span id="player2-nametag">Player 2</span>
         </div>
-        <div class="player1"></div>
-        <canvas></canvas>
-        <div class="player2"></div>
+        <div class="game-container">
+            <div class="player1-container">
+                <button type="button" id="p1-up-button">
+                    <div class="top">W</div>
+                    <div class="bottom"></div>
+                </button>
+                <button type="button" id="p1-down-button">
+                    <div class="top">S</div>
+                    <div class="bottom"></div>
+                </button>
+            </div>
+            <canvas></canvas>
+            <div class="player2-container">
+                <button type="button" id="p2-up-button">
+                    <div class="top">⮙</div>
+                    <div class="bottom"></div>
+                </button>
+                <button type="button" id="p2-down-button">
+                    <div class="top">⮛</div>
+                    <div class="bottom"></div>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module" src="canvas.js"></script>

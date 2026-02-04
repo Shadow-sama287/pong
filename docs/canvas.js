@@ -1,13 +1,13 @@
 import { randomIntFromRange, randomColor, distance } from './utils/utils.js';
-import { color1, color3, color8 } from './utils/colorArrays.js';
+import { color10 } from './utils/colorArrays.js';
 
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
 let gameStarted = false;
 
-let refinedWidth = innerWidth - 350;
-let refinedHeight = innerHeight - 75;
+let refinedWidth = innerWidth - 400;
+let refinedHeight = innerHeight - 100;
 
 canvas.width = refinedWidth;
 canvas.height = refinedHeight;
@@ -15,6 +15,11 @@ canvas.height = refinedHeight;
 let scoreRight = document.getElementById("score-right");
 let scoreLeft = document.getElementById("score-left");
 let score1 = 0, score2 = 0;
+
+let p1UpButton = document.getElementById("p1-up-button");
+let p1DownButton = document.getElementById("p1-down-button");
+let p2UpButton = document.getElementById("p2-up-button");
+let p2DownButton = document.getElementById("p2-down-button");
 
 addEventListener('resize', () => {
     canvas.width = innerWidth
@@ -46,15 +51,19 @@ const PADDLE_SPEED = 6;
 addEventListener('keydown', (event) => {
     const key = event.key;
 
-    if (key == 'a' || key == 'W') {
+    if (key.toLowerCase() === 'w') {
         paddleSpeed.left = -PADDLE_SPEED;
-    } else if (key == 's' || key == 'S') {
+        p1UpButton.classList.add('pressed');
+    } else if (key.toLowerCase() === 's') {
         paddleSpeed.left = PADDLE_SPEED;
+        p1DownButton.classList.add('pressed');
     }
     if (key == "ArrowUp") {
         paddleSpeed.right = -PADDLE_SPEED;
+        p2UpButton.classList.add('pressed');
     } else if (key == "ArrowDown") {
         paddleSpeed.right = PADDLE_SPEED;
+        p2DownButton.classList.add('pressed');
     }
 
     if (key === ' ' && !gameStarted) {
@@ -66,8 +75,16 @@ addEventListener('keydown', (event) => {
 addEventListener('keyup', (event) => {
     const key = event.key;
 
-    if (key.toLowerCase() === 'a' || key.toLowerCase() === 's') paddleSpeed.left = 0;
-    if (key == "ArrowUp" || key === "ArrowDown") paddleSpeed.right = 0;
+    if (key.toLowerCase() === 'w' || key.toLowerCase() === 's') {
+        paddleSpeed.left = 0;
+        p1UpButton.classList.remove('pressed')
+        p1DownButton.classList.remove('pressed')
+    }
+    if (key === "ArrowUp" || key === "ArrowDown") {
+        paddleSpeed.right = 0;
+        p2UpButton.classList.remove('pressed')
+        p2DownButton.classList.remove('pressed')
+    }
 });
 
 function getVelocity() {
@@ -215,15 +232,15 @@ let ballArray;
 let width = 10;
 let height = 100;
 function init() {
-    leftPaddle = new Paddle(20, (canvas.height / 2) - (height / 2), width, height, randomColor(color1));
-    rightPaddle = new Paddle(canvas.width - 20 - width, (canvas.height / 2) - (height / 2), width, height, randomColor(color3));
+    leftPaddle = new Paddle(20, (canvas.height / 2) - (height / 2), width, height, '#ff0055');
+    rightPaddle = new Paddle(canvas.width - 20 - width, (canvas.height / 2) - (height / 2), width, height, '#00f2ff');
 
     ballArray = [];
     for (let i = 0; i < 1; i++) {
         let radius = 30;
         let x = canvas.width / 2;
         let y = canvas.height / 2;
-        ballArray.push(new Circle(x, y, radius, randomColor(color8)))
+        ballArray.push(new Circle(x, y, radius, randomColor(color10)))
     }
 }
 
@@ -234,7 +251,7 @@ function animate() {
     c.save();
     c.beginPath();
     c.lineWidth = 3;
-    c.strokeStyle = 'white';
+    c.strokeStyle = '#0f3460';
     c.setLineDash([10, 5]);
     c.moveTo(canvas.width / 2, 0);
     c.lineTo(canvas.width / 2, canvas.height);
@@ -249,8 +266,8 @@ function animate() {
         rightPaddle.draw();
 
         c.save();
-        c.fillStyle = 'white';
-        c.font = '30px Verdana';
+        c.fillStyle = '#00ff9d';
+        c.font = '20px "Press Start 2P"';
         c.textAlign = 'center';
         c.fillText('Press SPACE to start', canvas.width / 2, canvas.height - 50);
         c.restore();
