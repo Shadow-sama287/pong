@@ -271,7 +271,8 @@ addEventListener('keyup', (event) => {
 // TOUCH / MOUSE - paddle movement handler
 function addPaddleListeners(element, playerSide, direction) {
     const startMove = (e) => {
-        e.preventDefault();
+        // Prevent default touch behaviors (scrolling, zooming)
+        if (e.cancelable) e.preventDefault();
 
         if (playerSide === 'left') {
             paddleSpeed.left = direction * PADDLE_SPEED;
@@ -285,7 +286,7 @@ function addPaddleListeners(element, playerSide, direction) {
     };
 
     const stopMove = (e) => {
-        e.preventDefault();
+        if (e.cancelable) e.preventDefault();
 
         if (playerSide === 'left') {
             paddleSpeed.left = 0;
@@ -303,7 +304,7 @@ function addPaddleListeners(element, playerSide, direction) {
 
     element.addEventListener('mouseup', stopMove);
     element.addEventListener('touchend', stopMove);
-
+    element.addEventListener('touchcancel', stopMove); // Also handle cancellation
 }
 
 // Initial listeners for Desktop Buttons (Always active)
@@ -313,10 +314,18 @@ addPaddleListeners(p2UpButton, 'right', -1);
 addPaddleListeners(p2DownButton, 'right', 1);
 
 // Add listeners for Touch Zones
-if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', -1);
-if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'left', 1);
-if (touchZones.p2Up) addPaddleListeners(touchZones.p2Up, 'right', -1);
-if (touchZones.p2Down) addPaddleListeners(touchZones.p2Down, 'right', 1);
+// Mapping based on user request:
+// Top-Left (p1Up ID): Left Paddle Down
+if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', 1);
+
+// Top-Right (p2Up ID): Left Paddle Up
+if (touchZones.p2Up) addPaddleListeners(touchZones.p2Up, 'left', -1);
+
+// Bottom-Left (p1Down ID): Right Paddle Down
+if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'right', 1);
+
+// Bottom-Right (p2Down ID): Right Paddle Up
+if (touchZones.p2Down) addPaddleListeners(touchZones.p2Down, 'right', -1);
 
 let leftPaddle, rightPaddle, ballArray;
 let paddleWidth, paddleHeight;
