@@ -314,18 +314,10 @@ addPaddleListeners(p2UpButton, 'right', -1);
 addPaddleListeners(p2DownButton, 'right', 1);
 
 // Add listeners for Touch Zones
-// Mapping based on user request:
-// Top-Left (p1Up ID): Left Paddle Down
-if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', 1);
-
-// Top-Right (p2Up ID): Left Paddle Up
-if (touchZones.p2Up) addPaddleListeners(touchZones.p2Up, 'left', -1);
-
-// Bottom-Left (p1Down ID): Right Paddle Down
-if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'right', 1);
-
-// Bottom-Right (p2Down ID): Right Paddle Up
-if (touchZones.p2Down) addPaddleListeners(touchZones.p2Down, 'right', -1);
+if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', -1);
+if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'left', 1);
+if (touchZones.p2Up) addPaddleListeners(touchZones.p2Up, 'right', -1);
+if (touchZones.p2Down) addPaddleListeners(touchZones.p2Down, 'right', 1);
 
 let leftPaddle, rightPaddle, ballArray;
 let paddleWidth, paddleHeight;
