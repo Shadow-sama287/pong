@@ -1,16 +1,33 @@
 import { randomIntFromRange, randomColor, distance } from './utils/utils.js';
 import { color10 } from './utils/colorArrays.js';
 
+// Initial Setup
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d');
 
 let gameStarted = false;
 
-let refinedWidth = innerWidth - 400;
-let refinedHeight = innerHeight - 100;
+// Set canvas dimensions
+function setCanvasDimensions() {
+    if (innerWidth <= 925) {
+        // Mobile: Canvas is inside a rotated container.
+        // The container is 100vh wide and 100vw high (rotated).
+        // We want the canvas to fit within this.
+        // Note: innerWidth is the portrait width (e.g. 400), innerHeight is portrait height (e.g. 800).
+        // The rotated container's "width" (visually horizontal) is innerHeight.
+        // Its "height" (visually vertical) is innerWidth.
 
-canvas.width = refinedWidth;
-canvas.height = refinedHeight;
+        // Let's make the canvas occupy a safe area.
+        canvas.width = innerHeight * 0.9; // 90% of the long side (which is horizontal in game)
+        canvas.height = innerWidth * 0.9; // 90% of the short side
+    } else {
+        // Desktop
+        canvas.width = innerWidth - 400;
+        canvas.height = innerHeight - 100;
+    }
+}
+
+setCanvasDimensions();
 
 // scoreboard defination
 let scoreRight = document.getElementById("score-right");
@@ -32,14 +49,10 @@ const touchZones = {
     p2Down: document.getElementById('touch-zone-p2-down')
 };
 
-addEventListener('resize', () => {
-    canvas.width = innerWidth
-    canvas.height = innerHeight
 
-    if (rightPaddle) {
-        rightPaddle.x = canvas.width - 20 - width;
-    }
-    // init()
+addEventListener('resize', () => {
+    setCanvasDimensions();
+    init(); // Recalculate everything on resize
 })
 
 let mouse = {
@@ -286,38 +299,11 @@ function addPaddleListeners(element, playerSide, direction) {
 
 }
 
-playBtn.addEventListener('click', () => {
-    if (!gameStarted) {
-        gameStarted = true;
-        playBtn.style.display = 'none'; // Hide button when playing
-        init(); // Reset positions
-    }
-});
-
-if (touchZones.p1Up) { // Check if elements exist to avoid errors
-    // Player 1 (Left/Top Paddle)
-    addPaddleListeners(touchZones.p1Up, 'left', -1);   // Up
-    addPaddleListeners(touchZones.p1Down, 'left', 1);  // Down
-    // Player 2 (Right/Bottom Paddle)
-    addPaddleListeners(touchZones.p2Up, 'right', -1);  // Up
-    addPaddleListeners(touchZones.p2Down, 'right', 1); // Down
-}
-
-// addEventListener('mousedown', () => {
-//     console.log('mouse down at', mouse.x, mouse.y);
-// });
-// addEventListener('mouseup', () => {
-//     console.log('mouse up at', mouse.x, mouse.y);
-// });
-// addEventListener('touchstart', () => {
-//     console.log('touch down at', mouse.x, mouse.y);
-// });
-// addEventListener('touchmove', () => {
-//     console.log('touch move at', mouse.x, mouse.y);
-// });
-// addEventListener('touchend', () => {
-//     console.log('touch up at', mouse.x, mouse.y);
-// });
+// Initial listeners for Desktop Buttons (Always active)
+addPaddleListeners(p1UpButton, 'left', -1);
+addPaddleListeners(p1DownButton, 'left', 1);
+addPaddleListeners(p2UpButton, 'right', -1);
+addPaddleListeners(p2DownButton, 'right', 1);
 
 let leftPaddle, rightPaddle, ballArray;
 let paddleWidth, paddleHeight;

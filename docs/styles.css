@@ -8,38 +8,52 @@
     --white: #ffffff;
 }
 
+/* Global Styles */
 html, body {
     margin: 0;
     padding: 0;
     overflow: hidden;
     height: 100vh;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column; /* Match desktop layout needs */
     background-color: var(--bg-color);
     color: var(--white);
-    font-family: 'Press Start 2P', cursive; /* Apply the new font */
+    font-family: 'Press Start 2P', cursive;
 }
 
-canvas {
-    border: 4px solid var(--accent-main); /* Define the play area */
-    box-shadow: 0 0 20px rgba(0, 242, 244, 0.2);
-    background-color: #000;
-    display: block;
-    border-radius: 4px;
+/* Desktop Layout Fixes */
+.whole-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Fill body */
+    width: 100vw;
+    overflow: hidden;
+    background-color: var(--bg-color); 
 }
 
-/* Scoreboard */
+/* Scoreboard - Desktop default */
 .scoreboard {
     text-align: center;
     font-size: 1.5rem;
-    margin-bottom: 10px;
-    z-index: 1;
+    padding: 10px 0; 
+    z-index: 10; 
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
     text-shadow: 2px 2px 0px var(--accent-main);
+    flex-shrink: 0; 
+}
+
+/* Game Container - Desktop default */
+.game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1; /* Take remaining height */
+    width: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 #score-left, #score-right {
@@ -74,25 +88,7 @@ canvas {
     z-index: 100; /* Above everything */
 }
 
-/* Game Container */
-.game-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    width: 100vw;
-    height: 100vh;
-}
-
-.player1-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 25px;
-}
-
-.player2-container {
+.player1-container, .player2-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -208,6 +204,10 @@ button:active .top::before, button.pressed .top::before {
 
 /* media queries for Mobile Responsive Landscape Design*/
 @media (max-width: 925px) {
+    .whole-container {
+        display: block; /* revert to block for absolute positioning context */
+    }
+
     .player-nametag {
         display: none;
     }
@@ -223,33 +223,35 @@ button:active .top::before, button.pressed .top::before {
         left: 0;
         width: 100%;
         height: 100%;
+        pointer-events: none; /* Let clicks pass through broadly, re-enable on specific elements if needed */
     }
+    
+    #mobile-controls > * {
+        pointer-events: auto; /* Re-enable pointer events for controls */
+    }
+
     .touch-zone {
         position: fixed;
         width: 50vw;
         height: 50vh;
         z-index: 20;
-        opacity: 0.3;
+        opacity: 0; /* Fully transparent */
     }
     .top-left {
         top: 0; 
         left: 0;
-        /* background-color: green; */
     }
     .bottom-left {
         bottom: 0; 
         left: 0;
-        /* background-color: blue; */
     }
     .top-right {
         top: 0; 
         right: 0;
-        /* background-color: yellow; */
     }
     .bottom-right {
         bottom: 0; 
         right: 0;
-        /* background-color: orange; */
     }
 
     #play-btn {
@@ -265,9 +267,6 @@ button:active .top::before, button.pressed .top::before {
         color: var(--neon-green);
         font-size: 2rem;
         padding-bottom: 6px;
-        /* display: flex; */
-        /* align-items: center; */
-        /* justify-content: center; */
         cursor: pointer;
     }
 
@@ -276,30 +275,106 @@ button:active .top::before, button.pressed .top::before {
     }
 
     .game-container {
-        position: fixed;
+        position: absolute;
+        top: 50%;
         left: 50%;
-        right: 50%;
-        width: 100vw;
-        height: 100vh;
         transform: translate(-50%, -50%) rotate(90deg);
-        display: block;
+        width: 100vh; /* Swap width/height for rotation */
+        height: 100vw;
+        display: flex;
+        justify-content: center; 
+        align-items: center;
         z-index: 1;
         overflow: hidden;
     }
 
     .scoreboard {
         position: fixed;
-        top: 10px;
-        left: 50%;
-        transform: translateX(-50%) rotate(90deg);
-        width: 100%;
+        /* "Right" side in portrait is "Bottom" visually if not rotated? No.
+           If game is rotated 90deg, "Right" side of phone is "Top" of the game area?
+           User said: "middle right corner (saying in perspective of potrait orientation of the mobile since the scoreboard is rotated by 80 degree)"
+           Rotated 90deg:
+           Phone Top -> Left
+           Phone Bottom -> Right
+           Phone Left -> Bottom
+           Phone Right -> Top
+           
+           Wait. The user says "middle right corner (portrait orientation)".
+           If I hold phone in portrait:
+           [   ]
+           [ S ]  <- Scoreboard on right edge
+           [   ]
+           
+           If entire game is rotated 90deg (landscape simulation):
+           The "Right" edge of portrait phone corresponds to the "Bottom" edge of the rotated container?
+           Let's visualize.
+           0deg (Portrait):
+           Top: Camera
+           Right: Power button
+           Bottom: Charging port
+           Left: Volume buttons
+           
+           Rotate 90deg (Landscape, Camera on Left):
+           Top: Right side of phone (Power button)
+           Right: Bottom of phone (Charging port)
+           Bottom: Left side of phone (Volume buttons)
+           Left: Top of phone (Camera)
+           
+           If we rotate content 90deg:
+           `transform: rotate(90deg)`
+           The content's "Top" points to the phone's "Right".
+           The content's "Right" points to the phone's "Bottom".
+           
+           User wants scoreboard on "middle right corner (portrait orientation)".
+           If portrait is held:
+           Right side is the vertical edge on the right.
+           
+           So in rotated coordinate system (since everything is rotated 90deg):
+           We want the scoreboard to appear at the "Top" of the landscape screen?
+           If phone is portrait, "Right" is "Top" in landscape (if camera left).
+           
+           Let's assume standard rotation.
+           Let's stick to placing it `right: 0` in the rotated container?
+           No, the scoreboard is likely `fixed` relative to viewport.
+           
+           If I want it on the physical Right edge of the device:
+           `right: 0; top: 50%; transform: translateY(-50%) rotate(90deg);`
+           Wait, if I rotate it 90deg, text runs vertically? Yes, likely desired if the game is landscape.
+           
+           If the game is landscape (rotated), the text should be horizontal relative to the GAME.
+           So if the game is rotated 90deg, the text should also be rotated 90deg to match the game.
+           
+           If the scoreboard is `fixed` at `right: 0`, and rotated 90deg:
+           It will be vertical text on the right edge.
+           Is that what is wanted? "middle right corner ... since the scoreboard is rotated"
+           
+           Let's try to center it on the Right edge.
+        */
+        top: 50%;
+        right: -30px; /* Offset to keep it near edge but visible */
+        left: auto; /* Unset left */
+        transform: translateY(-50%) rotate(90deg);
+        transform-origin: center;
+        width: auto;
         pointer-events: none;
+        flex-direction: row;
+        gap: 15px;
     }
 
-    canvas {
-        width: 90vw;
-        height: 100%;
-        display: block;
+    /* Override scoreboard items for mobile to fit better */
+    #score-left, #score-right {
+        padding: 5px 10px;
+        width: 30px;
+        font-size: 1rem;
+    }
+
+        /* On mobile, canvas fills the rotated container */
+        width: 100% !important; 
+        height: 100% !important;
+        margin: auto;
+        border: 4px solid var(--neon-blue); /* Distinct border */
+        background-color: #000; /* Ensure black bg */
+        box-shadow: 0 0 20px rgba(0, 242, 255, 0.2);
     }
 
     .player1-container{
