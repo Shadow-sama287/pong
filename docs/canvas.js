@@ -314,8 +314,8 @@ addPaddleListeners(p2UpButton, 'right', -1);
 addPaddleListeners(p2DownButton, 'right', 1);
 
 // Add listeners for Touch Zones
-if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', -1);
-if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'left', 1);
+if (touchZones.p1Up) addPaddleListeners(touchZones.p1Up, 'left', 1);
+if (touchZones.p1Down) addPaddleListeners(touchZones.p1Down, 'left', -1);
 if (touchZones.p2Up) addPaddleListeners(touchZones.p2Up, 'right', -1);
 if (touchZones.p2Down) addPaddleListeners(touchZones.p2Down, 'right', 1);
 
