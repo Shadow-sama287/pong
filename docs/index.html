@@ -11,12 +11,22 @@
 </head>
 <body>
     <div class="whole-container">
+
+        <div id="mobile-controls">
+            <div class="touch-zone top-left" id="touch-zone-p1-up"></div>
+            <div class="touch-zone bottom-left" id="touch-zone-p1-down"></div>
+            <div class="touch-zone top-right" id="touch-zone-p2-up"></div>
+            <div class="touch-zone bottom-right" id="touch-zone-p2-down"></div>
+
+            <button id="play-btn">⟁</button>
+        </div>
+
         <div class="scoreboard">
-            <span id="player1-nametag">Player 1</span>
+            <span id="player1-nametag" class="player-nametag">Player 1</span>
             <span id="score-left">0</span>
             <span id="separator">-</span>
             <span id="score-right">0</span>
-            <span id="player2-nametag">Player 2</span>
+            <span id="player2-nametag" class="player-nametag">Player 2</span>
         </div>
         <div class="game-container">
             <div class="player1-container">
