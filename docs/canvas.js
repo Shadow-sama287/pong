@@ -42,6 +42,13 @@ let p2DownButton = document.getElementById("p2-down-button");
 
 const playBtn = document.getElementById('play-btn');
 
+playBtn.addEventListener('click', () => {
+    if (!gameStarted) {
+        gameStarted = true;
+        playBtn.style.display = 'none'; // Hide button
+    }
+});
+
 const touchZones = {
     p1Up: document.getElementById('touch-zone-p1-up'),
     p1Down: document.getElementById('touch-zone-p1-down'),
