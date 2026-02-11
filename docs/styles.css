@@ -96,6 +96,30 @@ canvas {
     z-index: 100; /* Above everything */
 }
 
+#pause-btn {
+    display: none;
+    position: fixed;
+    bottom: -3%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid var(--neon-blue);
+    background-color: var(--bg-color);
+    box-shadow: 0 0 10px var(--neon-blue);
+    color: var(--neon-green);
+    font-size: 2rem;
+    padding-bottom: 6px;
+    cursor: pointer;
+    transition: all 0.35s ease-in-out;
+}
+
+#pause-btn.active {
+    transform: translate(-50%, -50%) rotate(360deg) scale(45.95);
+}
+
 .player1-container, .player2-container {
     display: flex;
     flex-direction: column;
@@ -375,6 +399,27 @@ button:active .top::before, button.pressed .top::before {
         padding: 5px 10px;
         width: 30px;
         font-size: 1rem;
+    }
+
+    #pause-btn {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 5%;
+        transform: translate(-50%, -50%) rotate(90deg);
+        z-index: 100;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--accent-main);
+        color: var(--neon-green);
+        font-size: 2rem;
+        padding-bottom: 6px;
+        cursor: pointer;
+    }
+
+    #pause-btn:active {
+        transform: translate(-50%, -50%) rotate(90deg) scale(0.95);
     }
 
         /* On mobile, canvas fills the rotated container */

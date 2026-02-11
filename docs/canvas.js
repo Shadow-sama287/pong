@@ -7,6 +7,7 @@ const c = canvas.getContext('2d');
 
 let gameStarted = false;
 
+
 // Set canvas dimensions
 function setCanvasDimensions() {
     if (innerWidth <= 925) {
@@ -41,11 +42,27 @@ let p2UpButton = document.getElementById("p2-up-button");
 let p2DownButton = document.getElementById("p2-down-button");
 
 const playBtn = document.getElementById('play-btn');
+const pauseBtn = document.getElementById('pause-btn');
 
+let animationTimeout;
 playBtn.addEventListener('click', () => {
     if (!gameStarted) {
+        clearTimeout(animationTimeout);
+        pauseBtn.classList.remove('active');
+        pauseBtn.style.display = 'block'; // Show button
         gameStarted = true;
         playBtn.style.display = 'none'; // Hide button
+    }
+});
+pauseBtn.addEventListener('click', () => {
+    if (gameStarted) {
+        gameStarted = false;
+        pauseBtn.classList.add('active');
+        setTimeout(() => {
+            pauseBtn.style.display = 'none';
+            pauseBtn.classList.remove('active');
+            playBtn.style.display = 'block';
+        }, 350);
     }
 });
 
@@ -234,7 +251,7 @@ addEventListener('keydown', (event) => {
 
     if (key.toLowerCase() === 'w') {
         paddleSpeed.left = -PADDLE_SPEED;
-        p1UpButton.classList.add('pressed');
+        p1Up.classList.add('pressed');
     } else if (key.toLowerCase() === 's') {
         paddleSpeed.left = PADDLE_SPEED;
         p1DownButton.classList.add('pressed');
@@ -249,6 +266,12 @@ addEventListener('keydown', (event) => {
 
     if (key === ' ' && !gameStarted) {
         gameStarted = true;
+        pauseBtn.style.display = "block";
+        return;
+    }
+    if (key === ' ' && gameStarted) {
+        gameStarted = false;
+        pauseBtn.style.display = "none";
         return;
     }
 });
